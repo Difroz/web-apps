@@ -10,6 +10,9 @@
             Published {{ post.publish }} by {{ post.author }}
         </p>
         {{ post.body|truncatewords:30|linebreaks }}
+<p>
+    <a href="{% url 'post_share' post.id %}">Share this post</a>
+</p>
     {% endfor %}
-{% include "pagination.html" with page=posts %}
+{% include "pagination.html" with page=page_obj %}
 {% endblock %}
