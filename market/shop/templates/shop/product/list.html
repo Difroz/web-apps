@@ -4,29 +4,39 @@
     {% if category %}{{ category.name }}{% else %}Products{% endif %}
 {% endblock %}
 {% block content %}
-    <div id="sidebar">
-        <h3>Categories</h3>
-        <ul>
-            <li {% if not category %}class="selected"{% endif %}>
-                <a href="{% url 'product_list' %}">All</a>
-            </li>
-            {% for c in categories %}
+<div class="row">
+    <div class="col-2">
+        <div class="sidebar-sticky">
+            <h3>Categories</h3>
+            <ul class="nav flex-column">
+                <li {% if not category %}class="selected"{% endif %}>
+                    <a href="{% url 'product_list' %}">All</a>
+                </li>
+                {% for c in categories %}
                 <li {% if category.slug == c.slug %} class="selected" {% endif %}>
                     <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
                 </li>
-            {% endfor %}
-        </ul>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-    <div id="main" class="product-list">
+    <div class="col">
         <h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1>
-        {% for product in products %}
-            <div class="item">
-                <a href="{{ product.get_absolute_url }}">
-                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
-                </a>
-                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a><br>
-                ${{ product.price }}
+        <div class="card" style="width: 18rem;">
+            {% for product in products %}
+            <a href="{{ product.get_absolute_url }}">
+                <img class="card-img-top" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+            </a>
+            <div class="card-body">
+                <h5 class="card-title text-center"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h5>
+                <h4 class="text-center">${{ product.price }}</h4>
             </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
+
+</div>
+
+
+
 {% endblock %}
