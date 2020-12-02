@@ -20,20 +20,26 @@
             </ul>
         </div>
     </div>
-    <div class="col">
+    <div class="container">
         <h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1>
-        <div class="card" style="width: 18rem;">
+        <div class="row">
             {% for product in products %}
-            <a href="{{ product.get_absolute_url }}">
-                <img class="card-img-top" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+            <div class="col-3  ml-2 mt-3">
+                <div class="card" style="width: 18rem;">
+            <a href="{{ product.get_absolute_url }}" class="text-center">
+                <img class="img-thumbnail" style="width:200px; height:200px" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
             </a>
             <div class="card-body">
                 <h5 class="card-title text-center"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h5>
                 <h4 class="text-center">${{ product.price }}</h4>
             </div>
+                </div>
+            </div>
             {% endfor %}
         </div>
-    </div>
+
+        </div>
+
 
 </div>
 
