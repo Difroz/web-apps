@@ -55,7 +55,6 @@ class Deal(models.Model):
             gem = gems_list.values('item').filter(models.Q(item__in=gems.values('item')) & models.Q(customer=i['customer'])).distinct()
             user_dict['gems'] = list(gem.values_list('item', flat=True))
             result_list.append(user_dict)
-        print(result_list)
         return result_list
 
 
