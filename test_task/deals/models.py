@@ -20,19 +20,21 @@ class Deal(models.Model):
     def import_csv(self, csv_file):
         """
         Загружает информацию из csv файла в БД
-        :param file: csv
-        :return:
         """
-        file = csv_file.read().decode('utf-8')
-        reader = csv.DictReader(io.StringIO(file))
-        data = [line for line in reader]
-        base = Deal.objects.all()
-        with transaction.atomic():
-            for row in data:
-                Deal.objects.get_or_create(**row)
+            file = csv_file.read().decode('utf-8')
+            reader = csv.DictReader(io.StringIO(file))
+            data = [line for line in reader]
+            with transaction.atomic():
+                for row in data:
+                    Deal.objects.get_or_create(**row)
+
 
     @classmethod
     def data_processing(cls):
+        """
+        Обрабатывае загруженные в БД данные
+        
+        """
         result_list = []
         users = Deal.objects.values('customer').annotate(spend_money=models.Sum('total')).order_by('-spend_money')[:5]
         gems_list = Deal.objects.values('item', 'customer').filter(
