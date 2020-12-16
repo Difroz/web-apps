@@ -1,3 +1,4 @@
+import re
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -20,12 +21,12 @@ class UploadViewSet(ViewSet):
         file = request.FILES.get('deals')
         if file:
             if file.name.split('.')[1] != 'csv':
-                return Response({'message': 'Wrong wormat file'}, status.HTTP_404_NOT_FOUND)
+                return Response({'message': 'Wrong format file'}, status.HTTP_404_NOT_FOUND)
             try:
-                Deal.import_csv(file)
+                file_data = Deal.upload_data(file)
             except:
                 return Response({'message': 'Error import csv'}, status.HTTP_404_NOT_FOUND)
-            data = Deal.data_processing()
+            data = Deal.data_processing(start_date=file_data[0]['date'], end_date=file_data[len(file_data)-1]['date'])
             serializer = InfoSerializer(data, many=True)
             return Response({'response': serializer.data}, status.HTTP_200_OK)
         else:

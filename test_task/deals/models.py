@@ -17,26 +17,32 @@ class Deal(models.Model):
         return self.customer
 
     @classmethod
-    def import_csv(self, csv_file):
+    def upload_data(cls, csv_file):
         """
         Загружает информацию из csv файла в БД
         """
-            file = csv_file.read().decode('utf-8')
-            reader = csv.DictReader(io.StringIO(file))
-            data = [line for line in reader]
-            with transaction.atomic():
-                for row in data:
-                    Deal.objects.get_or_create(**row)
+        file = csv_file.read().decode('utf-8')
+        reader = csv.DictReader(io.StringIO(file))
+        data = [line for line in reader]
+        with transaction.atomic():
+            for row in data:
+                Deal.objects.get_or_create(**row)
+        return data
 
 
     @classmethod
-    def data_processing(cls):
+    def data_processing(cls, start_date=None, end_date=None):
         """
         Обрабатывае загруженные в БД данные
         
         """
+
         result_list = []
-        users = Deal.objects.values('customer').annotate(spend_money=models.Sum('total')).order_by('-spend_money')[:5]
+        if start_date and end_date:
+            data = Deal.objects.filter(models.Q(date__gte=start_date) & models.Q(date__lte=end_date))
+        else:
+            data = Deal.objects.all()
+        users = data.values('customer').annotate(spend_money=models.Sum('total')).order_by('-spend_money')[:5]
         gems_list = Deal.objects.values('item', 'customer').filter(
             customer__in=users.values_list('customer', flat=True))
         gems = gems_list.values('item').annotate(unique_usr=models.Count('customer', distinct=True)).filter(

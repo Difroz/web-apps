@@ -1,10 +1,14 @@
 import csv
 import io
 from datetime import datetime
-
 from rest_framework import serializers
 
 from .models import Deal
+
+
+class DealsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Deal
 
 
 class InfoSerializer(serializers.Serializer):
@@ -21,6 +25,8 @@ class UploadSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('deals')
+
+
 
 
 
