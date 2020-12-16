@@ -21,7 +21,10 @@ class UploadViewSet(ViewSet):
         if file:
             if file.name.split('.')[1] != 'csv':
                 return Response({'message': 'Wrong wormat file'}, status.HTTP_404_NOT_FOUND)
-            Deal.import_csv(file)
+            try:
+                Deal.import_csv(file)
+            except:
+                return Response({'message': 'Error import csv'}, status.HTTP_404_NOT_FOUND)
             data = Deal.data_processing()
             serializer = InfoSerializer(data, many=True)
             return Response({'response': serializer.data}, status.HTTP_200_OK)
