@@ -21,18 +21,13 @@ class Deal(models.Model):
         """
         Загружает информацию из csv файла в БД
         """
-        try:
             file = csv_file.read().decode('utf-8')
             reader = csv.DictReader(io.StringIO(file))
             data = [line for line in reader]
-        except:
-            return "ERROR_FILE_READ"
-        try:
             with transaction.atomic():
                 for row in data:
                     Deal.objects.get_or_create(**row)
-        except:
-            return "ERROR_DB_SAVE"
+
 
     @classmethod
     def data_processing(cls):
