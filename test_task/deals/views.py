@@ -18,8 +18,9 @@ class UploadViewSet(ViewSet):
 
     def create(self, request):
         file = request.FILES.get('deals')
-
         if file:
+            if file.name.split('.')[1] != 'csv':
+                return Response({'message': 'Wrong wormat file'}, status.HTTP_404_NOT_FOUND)
             Deal.import_csv(file)
             data = Deal.data_processing()
             serializer = InfoSerializer(data, many=True)
