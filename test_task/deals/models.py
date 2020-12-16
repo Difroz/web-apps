@@ -1,9 +1,6 @@
 from django.db import models, transaction
 import csv
 import io
-from datetime import datetime
-
-from django.db.models import Func, F
 
 
 class Deal(models.Model):
